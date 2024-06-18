@@ -12,6 +12,3 @@ st.header('Attendance System using Face Recognition')
 
 st.success('Model loaded sucesfully')
 st.success('Redis db sucessfully connected')
-
-
-
