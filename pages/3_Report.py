@@ -96,17 +96,11 @@ with tab3:
         if pd.Series(x).isnull().all():
             return 'Absent'
         
-        elif x >= 0 and x < 1:
+        elif x >= 0 and x < 0.001:
             return 'Absent (Less than 1 hr)'
         
-        elif x >= 1 and x < 4:
-            return 'Half Day (less than 4 hours)'
-
-        elif x >= 4 and x < 6:
-            return 'Half Day'
-
-        elif x >= 6:
-            return 'Present' 
+        elif x >= 0.001 :
+            return 'Present'
         
     date_name_rol_zip_df['Status'] = date_name_rol_zip_df['Duration_hours'].apply(status_marker)
 
