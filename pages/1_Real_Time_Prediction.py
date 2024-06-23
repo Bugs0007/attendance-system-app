@@ -17,7 +17,7 @@ with st.spinner('Retriving Data from Redis DB ...'):
 st.success("Data sucessfully retrived from Redis")
 
 # time
-waitTime = 30 # time in sec
+waitTime = 5 # time in sec
 setTime = time.time()
 realtimepred = face_rec.RealTimePred() # real time prediction class
 
