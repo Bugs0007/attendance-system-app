@@ -236,11 +236,23 @@ pivot_df.index.name = 'Serial No.'
 if st.button('Show Attendance Report'):
     st.dataframe(pivot_df)
 
-# Filter and Search functionality
-st.subheader('Filter Students')
+# Student Search Section
+st.subheader('Student Search')
 
 # Search by student name
 search_name = st.text_input('Search by Student Name')
+
+if st.button('Search'):
+    if search_name:
+        student_data = merged_df[merged_df['Name'].str.contains(search_name, case=False)]
+        if not student_data.empty:
+            st.write(f"Attendance details for '{search_name}':")
+            st.dataframe(student_data[['Name', 'Role', 'Date', 'Status']])
+        else:
+            st.write(f"No attendance records found for '{search_name}'.")
+
+# Student Filter Section
+st.subheader('Student Filter')
 
 # Filter by date
 date_in = str(st.date_input('Filter Date', datetime.datetime.now().date()))
@@ -262,10 +274,6 @@ status_in = st.multiselect('Select the Status', ['ALL'] + status_list)
 if st.button('Filter'):
     filter_df = merged_df.copy()
     filter_df['Date'] = filter_df['Date'].astype(str)
-
-    # Filter by student name if provided
-    if search_name:
-        filter_df = filter_df[filter_df['Name'].str.contains(search_name, case=False)]
 
     # Filter by date
     if date_in != 'ALL':
@@ -292,6 +300,7 @@ if st.button('Filter'):
     filter_pivot_df.index.name = 'Serial No.'
 
     st.dataframe(filter_pivot_df)
+
 
 
 
