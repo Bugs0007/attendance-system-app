@@ -291,7 +291,7 @@ def filter_student_attendance(date_in, name_in, role_in, status_in):
     return pivot_df
 
 # Main application logic
-tab_selection = st.radio('Select a tab:', ['Attendance Report', 'Student Search', 'Filter Students'])
+tab_selection = st.sidebar.radio('Select a tab:', ['Attendance Report', 'Student Search', 'Filter Students'])
 
 if tab_selection == 'Attendance Report':
     st.subheader('Attendance Report')
@@ -324,6 +324,7 @@ elif tab_selection == 'Filter Students':
     if st.button('Submit'):
         filtered_report_df = filter_student_attendance(date_in, name_in, role_in, status_in)
         st.dataframe(filtered_report_df)
+
 
 
 
