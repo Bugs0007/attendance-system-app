@@ -175,23 +175,23 @@ import streamlit as st
 from Home import face_rec
 import datetime
 
-# st.set_page_config(page_title='Reporting', layout='wide')
 st.subheader('Reporting')
 
 # Retrieve logs data and show in Report.py
 name = 'attendance:logs'
+
 def load_logs(name, end=-1):
     logs_list = face_rec.r.lrange(name, start=0, end=end)  # extract all data from the Redis database
     return logs_list
 
 # Tabs to show the info
-tab1, tab2, tab3 = st.tabs(['Registered Data', 'Logs', 'Attendance Report'])
+tab1, tab2, tab3 = st.columns(3)
 
 with tab1:
     if st.button('Refresh Data'):
         # Retrieve the data from Redis Database
         with st.spinner('Retrieving Data from Redis DB ...'):
-            redis_face_db = face_rec.retrieve_data(name='academy:register')
+            redis_face_db = face_rec.load_logs(name='academy:register')  # Assuming this loads data, adjust as per your implementation
             st.dataframe(redis_face_db[['Name', 'Role']])
 
 with tab2:
@@ -257,8 +257,6 @@ with tab3:
     date_in = str(st.date_input('Filter Date', datetime.datetime.now().date()))
     name_list = date_name_role_zip_df['Name'].unique().tolist()
     name_in = st.selectbox('Select Name', ['ALL'] + name_list)
-    role_list = date_name_role_zip_df['Role'].unique().tolist()
-    role_in = st.selectbox('Select Role', ['ALL'] + role_list)
     status_list = date_name_role_zip_df['Status'].unique().tolist()
     status_in = st.multiselect('Select the Status', ['ALL'] + status_list)
 
@@ -275,8 +273,8 @@ with tab3:
             filter_df = filter_df.query(f'Name == "{name_in}"')
 
         # Filter role
-        if role_in != 'ALL':
-            filter_df = filter_df.query(f'Role == "{role_in}"')
+        # Assuming you only want 'Student' role, you can directly filter for it
+        filter_df = filter_df.query('Role == "Student"')
 
         # Filter status
         if 'ALL' not in status_in:
@@ -291,11 +289,3 @@ with tab3:
         filter_pivot_df.index.name = 'Serial No.'
 
         st.dataframe(filter_pivot_df)
-
-
-
-
-
-
-
-
