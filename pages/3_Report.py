@@ -319,7 +319,7 @@ with tabs[1]:
             student_attendance = search_student_attendance(search_name)
             if not student_attendance.empty:
                 st.write(f"Attendance details for '{search_name}':")
-                st.dataframe(student_attendance[['Name', 'Status']])
+                st.dataframe(student_attendance[['Date', 'Status']])
             else:
                 st.write(f"No attendance records found for '{search_name}'.")
 
