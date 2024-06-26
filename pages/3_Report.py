@@ -186,7 +186,7 @@ def load_logs(name, end=-1):
 
 # Function to retrieve registered data
 def retrieve_registered_data():
-    return face_rec.retrive_data(name='academy:register')
+    return face_rec.retrieve_data(name='academy:register')
 
 # Function to process logs and generate attendance report
 def generate_attendance_report():
@@ -336,7 +336,6 @@ with tabs[2]:
     if st.button('Filter'):
         filtered_report_df = filter_student_attendance(date_in, name_in, role_in, status_in)
         st.dataframe(filtered_report_df)
-
 
 
 
