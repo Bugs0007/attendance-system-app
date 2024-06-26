@@ -175,117 +175,158 @@ import streamlit as st
 from Home import face_rec
 import datetime
 
-st.set_page_config(layout='wide')
-st.subheader('Reporting')
+# Set page title and layout
+st.set_page_config(page_title='Attendance Reporting', layout='wide')
+st.title('Attendance Reporting')
 
-# Retrieve logs data and show in Report.py
-name = 'attendance:logs'
+# Function to retrieve logs from Redis
 def load_logs(name, end=-1):
     logs_list = face_rec.r.lrange(name, start=0, end=end)  # extract all data from the Redis database
     return logs_list
 
-# Retrieve registered data
-registered_data = face_rec.retrive_data(name='academy:register')
+# Function to retrieve registered data
+def retrieve_registered_data():
+    return face_rec.retrive_data(name='academy:register')
 
-# All possible combinations of dates, names, and roles
-name_role = registered_data[['Name', 'Role']].drop_duplicates()
+# Function to process logs and generate attendance report
+def generate_attendance_report():
+    logs_list = load_logs(name='attendance:logs')
 
-# Generate dates range based on the existing logs
-logs_list = load_logs(name=name)
-convert_byte_to_string = lambda x: x.decode('utf-8')
-logs_list_string = list(map(convert_byte_to_string, logs_list))
-split_string = lambda x: x.split('@')
-logs_nested_list = list(map(split_string, logs_list_string))
-logs_df = pd.DataFrame(logs_nested_list, columns=['Name', 'Role', 'Timestamp'])
-logs_df['Timestamp'] = logs_df['Timestamp'].apply(lambda x: x.split('.')[0])
-logs_df['Timestamp'] = pd.to_datetime(logs_df['Timestamp'])
-logs_df['Date'] = logs_df['Timestamp'].dt.date
+    # Convert logs to DataFrame
+    convert_byte_to_string = lambda x: x.decode('utf-8')
+    logs_list_string = list(map(convert_byte_to_string, logs_list))
+    split_string = lambda x: x.split('@')
+    logs_nested_list = list(map(split_string, logs_list_string))
+    logs_df = pd.DataFrame(logs_nested_list, columns=['Name', 'Role', 'Timestamp'])
 
-# All possible dates in the logs
-all_dates = pd.date_range(start=logs_df['Date'].min(), end=logs_df['Date'].max(), freq='D').date
+    # Clean and process timestamp data
+    logs_df['Timestamp'] = logs_df['Timestamp'].apply(lambda x: x.split('.')[0])
+    logs_df['Timestamp'] = pd.to_datetime(logs_df['Timestamp'])
+    logs_df['Date'] = logs_df['Timestamp'].dt.date
 
-# Create a DataFrame with all combinations of dates, names, and roles
-date_name_role_zip = []
-for dt in all_dates:
-    for name, role in name_role.values:
-        date_name_role_zip.append([dt, name, role])
+    # Generate all possible date and role combinations
+    all_dates = pd.date_range(start=logs_df['Date'].min(), end=logs_df['Date'].max(), freq='D').date
+    name_role = logs_df[['Name', 'Role']].drop_duplicates().values.tolist()
 
-date_name_role_zip_df = pd.DataFrame(date_name_role_zip, columns=['Date', 'Name', 'Role'])
+    date_name_role_zip = []
+    for dt in all_dates:
+        for name, role in name_role:
+            date_name_role_zip.append([dt, name, role])
 
-# Merge with logs_df to get timestamps and determine presence
-merged_df = pd.merge(date_name_role_zip_df, logs_df, how='left', on=['Date', 'Name', 'Role'])
+    date_name_role_zip_df = pd.DataFrame(date_name_role_zip, columns=['Date', 'Name', 'Role'])
 
-# Function to determine status based on presence in logs
-def status_marker(x):
-    if pd.Series(x).isnull().all():
-        return 'Absent'
-    else:
-        return 'Present'
+    # Merge with logs_df to determine attendance status
+    attendance_df = pd.merge(date_name_role_zip_df, logs_df, how='left', on=['Date', 'Name', 'Role'])
+    attendance_df['Status'] = attendance_df['Timestamp'].apply(lambda x: 'Present' if pd.notnull(x) else 'Absent')
 
-# Apply status marker function
-merged_df['Status'] = merged_df['Timestamp'].apply(status_marker)
+    # Pivot table to display attendance report
+    pivot_df = attendance_df.pivot_table(index=['Name', 'Role'], columns='Date', values='Status', aggfunc='first', fill_value='Absent')
+    pivot_df = pivot_df.reset_index()
+    pivot_df.index += 1
+    pivot_df.index.name = 'Serial No.'
 
-# Pivot the data to have dates as columns and names as rows
-pivot_df = merged_df.pivot_table(index=['Name', 'Role'], columns='Date', values='Status', aggfunc='first', fill_value='Absent')
+    return pivot_df
 
-# Reset index to add a serial number column
-pivot_df = pivot_df.reset_index()
-pivot_df.index += 1  # Start index from 1
-pivot_df.index.name = 'Serial No.'
+# Function to search for student attendance history by name
+def search_student_attendance(name):
+    logs_list = load_logs(name='attendance:logs')
 
-# Display buttons for Attendance Report, Student Search, and Student Filter side by side
-col1, col2, col3 = st.columns(3)
+    # Convert logs to DataFrame
+    convert_byte_to_string = lambda x: x.decode('utf-8')
+    logs_list_string = list(map(convert_byte_to_string, logs_list))
+    split_string = lambda x: x.split('@')
+    logs_nested_list = list(map(split_string, logs_list_string))
+    logs_df = pd.DataFrame(logs_nested_list, columns=['Name', 'Role', 'Timestamp'])
 
-with col1:
+    # Clean and process timestamp data
+    logs_df['Timestamp'] = logs_df['Timestamp'].apply(lambda x: x.split('.')[0])
+    logs_df['Timestamp'] = pd.to_datetime(logs_df['Timestamp'])
+    logs_df['Date'] = logs_df['Timestamp'].dt.date
+
+    # Filter logs by student name
+    student_attendance = logs_df[logs_df['Name'].str.contains(name, case=False)]
+
+    return student_attendance[['Name', 'Role', 'Date', 'Timestamp']].sort_values(by='Date')
+
+# Function to filter student attendance by date, name, role, and status
+def filter_student_attendance(date_in, name_in, role_in, status_in):
+    logs_list = load_logs(name='attendance:logs')
+
+    # Convert logs to DataFrame
+    convert_byte_to_string = lambda x: x.decode('utf-8')
+    logs_list_string = list(map(convert_byte_to_string, logs_list))
+    split_string = lambda x: x.split('@')
+    logs_nested_list = list(map(split_string, logs_list_string))
+    logs_df = pd.DataFrame(logs_nested_list, columns=['Name', 'Role', 'Timestamp'])
+
+    # Clean and process timestamp data
+    logs_df['Timestamp'] = logs_df['Timestamp'].apply(lambda x: x.split('.')[0])
+    logs_df['Timestamp'] = pd.to_datetime(logs_df['Timestamp'])
+    logs_df['Date'] = logs_df['Timestamp'].dt.date
+
+    # Apply filters
+    filtered_df = logs_df.copy()
+
+    if date_in != 'ALL':
+        filtered_df = filtered_df[filtered_df['Date'] == date_in]
+
+    if name_in != 'ALL':
+        filtered_df = filtered_df[filtered_df['Name'] == name_in]
+
+    if role_in != 'ALL':
+        filtered_df = filtered_df[filtered_df['Role'] == role_in]
+
+    if 'ALL' not in status_in:
+        filtered_df = filtered_df[filtered_df['Status'].isin(status_in)]
+
+    # Generate pivot table for filtered data
+    pivot_df = filtered_df.pivot_table(index=['Name', 'Role'], columns='Date', values='Status', aggfunc='first', fill_value='Absent')
+    pivot_df = pivot_df.reset_index()
+    pivot_df.index += 1
+    pivot_df.index.name = 'Serial No.'
+
+    return pivot_df
+
+# Define UI layout using Streamlit tabs
+tabs = st.tabs(['Show Attendance Report', 'Student Search', 'Filter Students'])
+
+# Show Attendance Report tab
+with tabs[0]:
     if st.button('Show Attendance Report'):
-        st.dataframe(pivot_df)
+        st.subheader('Attendance Report')
+        attendance_report_df = generate_attendance_report()
+        st.dataframe(attendance_report_df)
 
-with col2:
+# Student Search tab
+with tabs[1]:
     if st.button('Student Search'):
         st.subheader('Student Search')
         search_name = st.text_input('Search by Student Name')
         if st.button('Search'):
             if search_name:
-                student_data = merged_df[merged_df['Name'].str.contains(search_name, case=False)]
-                if not student_data.empty:
+                student_attendance = search_student_attendance(search_name)
+                if not student_attendance.empty:
                     st.write(f"Attendance details for '{search_name}':")
-                    st.dataframe(student_data[['Name', 'Role', 'Date', 'Status']])
+                    st.dataframe(student_attendance[['Name', 'Role', 'Date', 'Timestamp']])
                 else:
                     st.write(f"No attendance records found for '{search_name}'.")
 
-with col3:
+# Filter Students tab
+with tabs[2]:
     if st.button('Filter Students'):
         st.subheader('Student Filter')
         date_in = str(st.date_input('Filter Date', datetime.datetime.now().date()))
-        name_list = merged_df['Name'].unique().tolist()
+        name_list = retrieve_registered_data()['Name'].unique().tolist()
         name_in = st.selectbox('Select Name', ['ALL'] + name_list)
-        role_list = merged_df['Role'].unique().tolist()
+        role_list = retrieve_registered_data()['Role'].unique().tolist()
         role_in = st.selectbox('Select Role', ['ALL'] + role_list)
         status_list = ['Absent', 'Present']
         status_in = st.multiselect('Select the Status', ['ALL'] + status_list)
 
         if st.button('Filter'):
-            filter_df = merged_df.copy()
-            filter_df['Date'] = filter_df['Date'].astype(str)
+            filtered_report_df = filter_student_attendance(date_in, name_in, role_in, status_in)
+            st.dataframe(filtered_report_df)
 
-            if date_in != 'ALL':
-                filter_df = filter_df.query(f'Date == "{date_in}"')
-
-            if name_in != 'ALL':
-                filter_df = filter_df.query(f'Name == "{name_in}"')
-
-            if role_in != 'ALL':
-                filter_df = filter_df.query(f'Role == "{role_in}"')
-
-            if 'ALL' not in status_in:
-                filter_df = filter_df[filter_df['Status'].isin(status_in)]
-
-            filter_pivot_df = filter_df.pivot_table(index=['Name', 'Role'], columns='Date', values='Status', aggfunc='first', fill_value='Absent')
-            filter_pivot_df = filter_pivot_df.reset_index()
-            filter_pivot_df.index += 1
-            filter_pivot_df.index.name = 'Serial No.'
-
-            st.dataframe(filter_pivot_df)
 
 
 
