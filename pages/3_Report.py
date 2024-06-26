@@ -221,7 +221,7 @@ with tab3:
     logs_df['Date'] = logs_df['Timestamp'].dt.date
 
     # Step 4: Marking Person as Present or Absent
-    all_dates = logs_df['Date'].unique()
+    all_dates = pd.date_range(start=logs_df['Date'].min(), end=logs_df['Date'].max(), freq='D').date
     name_role = logs_df[['Name', 'Role']].drop_duplicates().values.tolist()
 
     date_name_role_zip = []
@@ -250,7 +250,6 @@ with tab3:
     pivot_df.index += 1  # Start index from 1
     pivot_df.index.name = 'Serial No.'
 
-    
     st.dataframe(pivot_df)
 
     # Filter and Search functionality
@@ -292,6 +291,7 @@ with tab3:
         filter_pivot_df.index.name = 'Serial No.'
 
         st.dataframe(filter_pivot_df)
+
 
 
             
