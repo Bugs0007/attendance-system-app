@@ -184,7 +184,7 @@ def load_logs(name, end=-1):
     return logs_list
 
 # Retrieve registered data
-registered_data = face_rec.retrive_data(name='academy:register')
+registered_data = face_rec.retrieve_data(name='academy:register')
 
 # All possible combinations of dates, names, and roles
 name_role = registered_data[['Name', 'Role']].drop_duplicates()
@@ -221,6 +221,7 @@ def status_marker(x):
     else:
         return 'Present'
 
+# Apply status marker function
 merged_df['Status'] = merged_df['Timestamp'].apply(status_marker)
 
 # Pivot the data to have dates as columns and names as rows
@@ -237,11 +238,11 @@ st.dataframe(pivot_df)
 # Filter and Search functionality
 st.subheader('Search Records')
 date_in = str(st.date_input('Filter Date', datetime.datetime.now().date()))
-name_list = pivot_df['Name'].unique().tolist()
+name_list = merged_df['Name'].unique().tolist()
 name_in = st.selectbox('Select Name', ['ALL'] + name_list)
-role_list = pivot_df['Role'].unique().tolist()
+role_list = merged_df['Role'].unique().tolist()
 role_in = st.selectbox('Select Role', ['ALL'] + role_list)
-status_list = pivot_df['Status'].unique().tolist()
+status_list = ['Absent', 'Present']  # Define possible status values
 status_in = st.multiselect('Select the Status', ['ALL'] + status_list)
 
 if st.button('Submit'):
@@ -273,5 +274,6 @@ if st.button('Submit'):
     filter_pivot_df.index.name = 'Serial No.'
 
     st.dataframe(filter_pivot_df)
+
 
 
