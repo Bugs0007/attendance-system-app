@@ -175,6 +175,7 @@ import streamlit as st
 from Home import face_rec
 import datetime
 
+st.set_page_config(layout='wide')
 st.subheader('Reporting')
 
 # Retrieve logs data and show in Report.py
@@ -184,7 +185,7 @@ def load_logs(name, end=-1):
     return logs_list
 
 # Retrieve registered data
-registered_data = face_rec.retrive_data(name='academy:register')
+registered_data = face_rec.retrieve_data(name='academy:register')
 
 # All possible combinations of dates, names, and roles
 name_role = registered_data[['Name', 'Role']].drop_duplicates()
