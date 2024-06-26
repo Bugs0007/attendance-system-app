@@ -232,54 +232,60 @@ pivot_df = pivot_df.reset_index()
 pivot_df.index += 1  # Start index from 1
 pivot_df.index.name = 'Serial No.'
 
-# Display buttons for Attendance Report, Student Search, and Student Filter
-if st.button('Show Attendance Report'):
-    st.dataframe(pivot_df)
+# Display buttons for Attendance Report, Student Search, and Student Filter side by side
+col1, col2, col3 = st.columns(3)
 
-if st.button('Student Search'):
-    st.subheader('Student Search')
-    search_name = st.text_input('Search by Student Name')
-    if st.button('Search'):
-        if search_name:
-            student_data = merged_df[merged_df['Name'].str.contains(search_name, case=False)]
-            if not student_data.empty:
-                st.write(f"Attendance details for '{search_name}':")
-                st.dataframe(student_data[['Name', 'Role', 'Date', 'Status']])
-            else:
-                st.write(f"No attendance records found for '{search_name}'.")
+with col1:
+    if st.button('Show Attendance Report'):
+        st.dataframe(pivot_df)
 
-if st.button('Student Filter'):
-    st.subheader('Student Filter')
-    date_in = str(st.date_input('Filter Date', datetime.datetime.now().date()))
-    name_list = merged_df['Name'].unique().tolist()
-    name_in = st.selectbox('Select Name', ['ALL'] + name_list)
-    role_list = merged_df['Role'].unique().tolist()
-    role_in = st.selectbox('Select Role', ['ALL'] + role_list)
-    status_list = ['Absent', 'Present']
-    status_in = st.multiselect('Select the Status', ['ALL'] + status_list)
+with col2:
+    if st.button('Student Search'):
+        st.subheader('Student Search')
+        search_name = st.text_input('Search by Student Name')
+        if st.button('Search'):
+            if search_name:
+                student_data = merged_df[merged_df['Name'].str.contains(search_name, case=False)]
+                if not student_data.empty:
+                    st.write(f"Attendance details for '{search_name}':")
+                    st.dataframe(student_data[['Name', 'Role', 'Date', 'Status']])
+                else:
+                    st.write(f"No attendance records found for '{search_name}'.")
 
-    if st.button('Filter'):
-        filter_df = merged_df.copy()
-        filter_df['Date'] = filter_df['Date'].astype(str)
+with col3:
+    if st.button('Filter Students'):
+        st.subheader('Student Filter')
+        date_in = str(st.date_input('Filter Date', datetime.datetime.now().date()))
+        name_list = merged_df['Name'].unique().tolist()
+        name_in = st.selectbox('Select Name', ['ALL'] + name_list)
+        role_list = merged_df['Role'].unique().tolist()
+        role_in = st.selectbox('Select Role', ['ALL'] + role_list)
+        status_list = ['Absent', 'Present']
+        status_in = st.multiselect('Select the Status', ['ALL'] + status_list)
 
-        if date_in != 'ALL':
-            filter_df = filter_df.query(f'Date == "{date_in}"')
+        if st.button('Filter'):
+            filter_df = merged_df.copy()
+            filter_df['Date'] = filter_df['Date'].astype(str)
 
-        if name_in != 'ALL':
-            filter_df = filter_df.query(f'Name == "{name_in}"')
+            if date_in != 'ALL':
+                filter_df = filter_df.query(f'Date == "{date_in}"')
 
-        if role_in != 'ALL':
-            filter_df = filter_df.query(f'Role == "{role_in}"')
+            if name_in != 'ALL':
+                filter_df = filter_df.query(f'Name == "{name_in}"')
 
-        if 'ALL' not in status_in:
-            filter_df = filter_df[filter_df['Status'].isin(status_in)]
+            if role_in != 'ALL':
+                filter_df = filter_df.query(f'Role == "{role_in}"')
 
-        filter_pivot_df = filter_df.pivot_table(index=['Name', 'Role'], columns='Date', values='Status', aggfunc='first', fill_value='Absent')
-        filter_pivot_df = filter_pivot_df.reset_index()
-        filter_pivot_df.index += 1
-        filter_pivot_df.index.name = 'Serial No.'
+            if 'ALL' not in status_in:
+                filter_df = filter_df[filter_df['Status'].isin(status_in)]
 
-        st.dataframe(filter_pivot_df)
+            filter_pivot_df = filter_df.pivot_table(index=['Name', 'Role'], columns='Date', values='Status', aggfunc='first', fill_value='Absent')
+            filter_pivot_df = filter_pivot_df.reset_index()
+            filter_pivot_df.index += 1
+            filter_pivot_df.index.name = 'Serial No.'
+
+            st.dataframe(filter_pivot_df)
+
 
 
 
