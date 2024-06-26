@@ -288,44 +288,42 @@ def filter_student_attendance(date_in, name_in, role_in, status_in):
     return pivot_df
 
 # Define UI layout using Streamlit tabs
-tabs = st.tabs(['Show Attendance Report', 'Student Search', 'Filter Students'])
+tabs = st.tabs(['Attendance Report', 'Student Search', 'Filter Students'])
 
-# Show Attendance Report tab
+# Attendance Report tab
 with tabs[0]:
-    if st.button('Show Attendance Report'):
-        st.subheader('Attendance Report')
-        attendance_report_df = generate_attendance_report()
-        st.dataframe(attendance_report_df)
+    st.subheader('Attendance Report')
+    attendance_report_df = generate_attendance_report()
+    st.dataframe(attendance_report_df)
 
 # Student Search tab
 with tabs[1]:
-    if st.button('Student Search'):
-        st.subheader('Student Search')
-        search_name = st.text_input('Search by Student Name')
-        if st.button('Search'):
-            if search_name:
-                student_attendance = search_student_attendance(search_name)
-                if not student_attendance.empty:
-                    st.write(f"Attendance details for '{search_name}':")
-                    st.dataframe(student_attendance[['Name', 'Role', 'Date', 'Timestamp']])
-                else:
-                    st.write(f"No attendance records found for '{search_name}'.")
+    st.subheader('Student Search')
+    search_name = st.text_input('Search by Student Name')
+    if st.button('Search'):
+        if search_name:
+            student_attendance = search_student_attendance(search_name)
+            if not student_attendance.empty:
+                st.write(f"Attendance details for '{search_name}':")
+                st.dataframe(student_attendance[['Name', 'Role', 'Date', 'Timestamp']])
+            else:
+                st.write(f"No attendance records found for '{search_name}'.")
 
 # Filter Students tab
 with tabs[2]:
-    if st.button('Filter Students'):
-        st.subheader('Student Filter')
-        date_in = str(st.date_input('Filter Date', datetime.datetime.now().date()))
-        name_list = retrieve_registered_data()['Name'].unique().tolist()
-        name_in = st.selectbox('Select Name', ['ALL'] + name_list)
-        role_list = retrieve_registered_data()['Role'].unique().tolist()
-        role_in = st.selectbox('Select Role', ['ALL'] + role_list)
-        status_list = ['Absent', 'Present']
-        status_in = st.multiselect('Select the Status', ['ALL'] + status_list)
+    st.subheader('Student Filter')
+    date_in = str(st.date_input('Filter Date', datetime.datetime.now().date()))
+    name_list = retrieve_registered_data()['Name'].unique().tolist()
+    name_in = st.selectbox('Select Name', ['ALL'] + name_list)
+    role_list = retrieve_registered_data()['Role'].unique().tolist()
+    role_in = st.selectbox('Select Role', ['ALL'] + role_list)
+    status_list = ['Absent', 'Present']
+    status_in = st.multiselect('Select the Status', ['ALL'] + status_list)
 
-        if st.button('Filter'):
-            filtered_report_df = filter_student_attendance(date_in, name_in, role_in, status_in)
-            st.dataframe(filtered_report_df)
+    if st.button('Filter'):
+        filtered_report_df = filter_student_attendance(date_in, name_in, role_in, status_in)
+        st.dataframe(filtered_report_df)
+
 
 
 
