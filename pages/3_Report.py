@@ -250,7 +250,7 @@ with tab3:
     pivot_df.index += 1  # Start index from 1
     pivot_df.index.name = 'Serial No.'
 
-    st.subheader('Attendance Report')
+    
     st.dataframe(pivot_df)
 
     # Filter and Search functionality
