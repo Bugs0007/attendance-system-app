@@ -184,7 +184,7 @@ def load_logs(name, end=-1):
     return logs_list
 
 # Retrieve registered data
-registered_data = face_rec.retrive_data(name='academy:register')
+registered_data = face_rec.retrieve_data(name='academy:register')
 
 # All possible combinations of dates, names, and roles
 name_role = registered_data[['Name', 'Role']].drop_duplicates()
@@ -232,11 +232,12 @@ pivot_df = pivot_df.reset_index()
 pivot_df.index += 1  # Start index from 1
 pivot_df.index.name = 'Serial No.'
 
-# Display the attendance report
-st.dataframe(pivot_df)
+# Display the attendance report with a button
+if st.button('Show Attendance Report'):
+    st.dataframe(pivot_df)
 
 # Filter and Search functionality
-st.subheader('Search Records')
+st.subheader('Filter Students')
 
 # Search by student name
 search_name = st.text_input('Search by Student Name')
@@ -258,7 +259,7 @@ status_list = ['Absent', 'Present']
 # Multiselect for status
 status_in = st.multiselect('Select the Status', ['ALL'] + status_list)
 
-if st.button('Submit'):
+if st.button('Filter'):
     filter_df = merged_df.copy()
     filter_df['Date'] = filter_df['Date'].astype(str)
 
@@ -291,6 +292,7 @@ if st.button('Submit'):
     filter_pivot_df.index.name = 'Serial No.'
 
     st.dataframe(filter_pivot_df)
+
 
 
 
