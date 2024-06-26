@@ -237,31 +237,48 @@ st.dataframe(pivot_df)
 
 # Filter and Search functionality
 st.subheader('Search Records')
+
+# Search by student name
+search_name = st.text_input('Search by Student Name')
+
+# Filter by date
 date_in = str(st.date_input('Filter Date', datetime.datetime.now().date()))
+
+# Dropdown for names
 name_list = merged_df['Name'].unique().tolist()
 name_in = st.selectbox('Select Name', ['ALL'] + name_list)
+
+# Dropdown for roles (assuming role 'Student' as default)
 role_list = merged_df['Role'].unique().tolist()
 role_in = st.selectbox('Select Role', ['ALL'] + role_list)
-status_list = ['Absent', 'Present']  # Define possible status values
+
+# Define possible status values
+status_list = ['Absent', 'Present']
+
+# Multiselect for status
 status_in = st.multiselect('Select the Status', ['ALL'] + status_list)
 
 if st.button('Submit'):
     filter_df = merged_df.copy()
     filter_df['Date'] = filter_df['Date'].astype(str)
 
-    # Filter date
+    # Filter by student name if provided
+    if search_name:
+        filter_df = filter_df[filter_df['Name'].str.contains(search_name, case=False)]
+
+    # Filter by date
     if date_in != 'ALL':
         filter_df = filter_df.query(f'Date == "{date_in}"')
 
-    # Filter name
+    # Filter by name
     if name_in != 'ALL':
         filter_df = filter_df.query(f'Name == "{name_in}"')
 
-    # Filter role
+    # Filter by role
     if role_in != 'ALL':
         filter_df = filter_df.query(f'Role == "{role_in}"')
 
-    # Filter status
+    # Filter by status
     if 'ALL' not in status_in:
         filter_df = filter_df[filter_df['Status'].isin(status_in)]
 
@@ -274,6 +291,7 @@ if st.button('Submit'):
     filter_pivot_df.index.name = 'Serial No.'
 
     st.dataframe(filter_pivot_df)
+
 
 
 
