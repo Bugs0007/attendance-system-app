@@ -175,7 +175,6 @@ import streamlit as st
 from Home import face_rec
 import datetime
 
-# st.set_page_config(page_title='Reporting', layout='wide')
 st.subheader('Reporting')
 
 # Retrieve logs data and show in Report.py
@@ -185,7 +184,7 @@ def load_logs(name, end=-1):
     return logs_list
 
 # Tabs to show the info
-tab1, tab2, tab3 = st.tabs(['Registered Data', 'Logs', 'Attendance Report'])
+tab1, tab2, tab3 = st.columns(3)
 
 with tab1:
     if st.button('Refresh Data'):
@@ -290,6 +289,7 @@ with tab3:
         filter_pivot_df.index.name = 'Serial No.'
 
         st.dataframe(filter_pivot_df)
+
 
 
 
