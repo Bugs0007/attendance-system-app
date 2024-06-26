@@ -257,8 +257,6 @@ with tab3:
     date_in = str(st.date_input('Filter Date', datetime.datetime.now().date()))
     name_list = date_name_role_zip_df['Name'].unique().tolist()
     name_in = st.selectbox('Select Name', ['ALL'] + name_list)
-    role_list = date_name_role_zip_df['Role'].unique().tolist()
-    role_in = st.selectbox('Select Role', ['ALL'] + role_list)
     status_list = date_name_role_zip_df['Status'].unique().tolist()
     status_in = st.multiselect('Select the Status', ['ALL'] + status_list)
 
