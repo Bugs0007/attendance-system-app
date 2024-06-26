@@ -27,8 +27,7 @@ def video_callback_func(frame):
 ####### Registration Form ##########
 with st.container(border=True):
     name = st.text_input(label='Name',placeholder='Enter First name and Last name')
-    role = st.selectbox(label='Role', placeholder='Select Role', options=('--select--',
-                                                                          'Student', 'Teacher'))
+    role = 'Student'
 
     course = st.selectbox(label='Select Course', placeholder='Select Course',
                           options=('--select--','Computer Science',
