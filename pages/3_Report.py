@@ -206,21 +206,23 @@ def generate_attendance_report():
 
     # Generate all possible date and role combinations
     all_dates = pd.date_range(start=logs_df['Date'].min(), end=logs_df['Date'].max(), freq='D').date
-    name_role = logs_df[['Name', 'Role']].drop_duplicates().values.tolist()
+    registered_students = retrieve_registered_data()
 
-    date_name_role_zip = []
-    for dt in all_dates:
-        for name, role in name_role:
-            date_name_role_zip.append([dt, name, role])
+    # Ensure all registered students are included in the report
+    attendance_report_data = []
+    for name, role in registered_students[['Name', 'Role']].values:
+        for dt in all_dates:
+            attendance_report_data.append({'Date': dt, 'Name': name, 'Role': role})
 
-    date_name_role_zip_df = pd.DataFrame(date_name_role_zip, columns=['Date', 'Name', 'Role'])
+    # Convert to DataFrame
+    attendance_report_df = pd.DataFrame(attendance_report_data)
 
     # Merge with logs_df to determine attendance status
-    attendance_df = pd.merge(date_name_role_zip_df, logs_df, how='left', on=['Date', 'Name', 'Role'])
-    attendance_df['Status'] = attendance_df['Timestamp'].apply(lambda x: 'Present' if pd.notnull(x) else 'Absent')
+    attendance_report_df = pd.merge(attendance_report_df, logs_df, how='left', on=['Date', 'Name', 'Role'])
+    attendance_report_df['Status'] = attendance_report_df['Timestamp'].apply(lambda x: 'Present' if pd.notnull(x) else 'Absent')
 
     # Pivot table to display attendance report
-    pivot_df = attendance_df.pivot_table(index=['Name', 'Role'], columns='Date', values='Status', aggfunc='first', fill_value='Absent')
+    pivot_df = attendance_report_df.pivot_table(index=['Name', 'Role'], columns='Date', values='Status', aggfunc='first', fill_value='Absent')
     pivot_df = pivot_df.reset_index()
     pivot_df.index += 1
     pivot_df.index.name = 'Serial No.'
@@ -246,7 +248,18 @@ def search_student_attendance(name):
     # Filter logs by student name
     student_attendance = logs_df[logs_df['Name'].str.contains(name, case=False)]
 
-    return student_attendance[['Name', 'Role', 'Date', 'Timestamp']].sort_values(by='Date')
+    # Generate attendance report format
+    all_dates = pd.date_range(start=logs_df['Date'].min(), end=logs_df['Date'].max(), freq='D').date
+    attendance_data = []
+    for dt in all_dates:
+        attendance_status = student_attendance[student_attendance['Date'] == dt]['Timestamp'].notnull().any()
+        status = 'Present' if attendance_status else 'Absent'
+        attendance_data.append({'Date': dt, 'Name': name, 'Status': status})
+
+    # Convert to DataFrame
+    student_attendance_report_df = pd.DataFrame(attendance_data)
+
+    return student_attendance_report_df
 
 # Function to filter student attendance by date, name, role, and status
 def filter_student_attendance(date_in, name_in, role_in, status_in):
@@ -277,6 +290,7 @@ def filter_student_attendance(date_in, name_in, role_in, status_in):
         filtered_df = filtered_df[filtered_df['Role'] == role_in]
 
     if 'ALL' not in status_in:
+        filtered_df['Status'] = filtered_df['Timestamp'].apply(lambda x: 'Present' if pd.notnull(x) else 'Absent')
         filtered_df = filtered_df[filtered_df['Status'].isin(status_in)]
 
     # Generate pivot table for filtered data
@@ -305,18 +319,17 @@ with tabs[1]:
             student_attendance = search_student_attendance(search_name)
             if not student_attendance.empty:
                 st.write(f"Attendance details for '{search_name}':")
-                st.dataframe(student_attendance[['Name', 'Role', 'Date', 'Timestamp']])
+                st.dataframe(student_attendance[['Name', 'Status']])
             else:
                 st.write(f"No attendance records found for '{search_name}'.")
 
 # Filter Students tab
 with tabs[2]:
-    st.subheader('Student Filter')
+    st.subheader('Filter Students')
     date_in = str(st.date_input('Filter Date', datetime.datetime.now().date()))
     name_list = retrieve_registered_data()['Name'].unique().tolist()
     name_in = st.selectbox('Select Name', ['ALL'] + name_list)
-    role_list = retrieve_registered_data()['Role'].unique().tolist()
-    role_in = st.selectbox('Select Role', ['ALL'] + role_list)
+    role_in = 'Student'  # Default role set to 'Student'
     status_list = ['Absent', 'Present']
     status_in = st.multiselect('Select the Status', ['ALL'] + status_list)
 
