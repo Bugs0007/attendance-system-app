@@ -169,7 +169,7 @@ def run_report_page(face_rec):
 
     # Function to retrieve registered data
     def retrieve_registered_data():
-        return face_rec.retrive_data(name='academy:register')
+        return face_rec.retrieve_data(name='academy:register')
 
     # Function to process logs and generate attendance report
     def generate_attendance_report():
