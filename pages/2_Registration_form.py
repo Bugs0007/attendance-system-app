@@ -1,3 +1,4 @@
+def run_register_page(face_rec):
 import streamlit as st
 from Home import face_rec
 import cv2
