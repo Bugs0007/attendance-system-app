@@ -17,7 +17,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if username == 'admin' and password == 'password':
+        if username == 'admin' and password == 'password':  # Replace with actual authentication logic
             session['logged_in'] = True
             return redirect(url_for('home'))
         else:
