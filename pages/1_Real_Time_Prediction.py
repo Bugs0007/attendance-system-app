@@ -4,7 +4,7 @@ from Home import face_rec
 from streamlit_webrtc import webrtc_streamer
 import av
 import time
-def run_realtime_prediction_page(face_rec):
+def run_realtime_prediction_page():
 # from auth import authenticator
 
 # st.set_page_config(page_title='Predictions')
