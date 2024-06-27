@@ -1,5 +1,5 @@
 import streamlit as st
-from auth import authenticate  # Assuming authenticate function is imported correctly
+from auth import authenticate 
 
 # Check if the user is authenticated
 if 'authenticated' not in st.session_state:
@@ -11,7 +11,7 @@ else:
     st.set_page_config(page_title='Attendance System', layout='wide')
 
     with st.spinner("Initializing face recognition components"):
-        import face_rec  # Importing face_rec module inside the else block
+        import face_rec  
 
     st.header('Attendance System using Face Recognition')
     st.success('Model loaded successfully')
