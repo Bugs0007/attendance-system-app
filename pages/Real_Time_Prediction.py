@@ -55,7 +55,7 @@ from streamlit_webrtc import webrtc_streamer
 import av
 import time
 
-def run_realtime_prediction_page():
+def run_realtime_prediction_page(face_rec):
     st.subheader('Real-Time Attendance System')
 
     # Retrieve the data from Redis Database
