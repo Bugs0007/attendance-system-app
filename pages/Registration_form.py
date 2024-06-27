@@ -71,7 +71,7 @@
 # # else:
 # #     authenticator.login('Login', 'main')
 import streamlit as st
-from Home import face_rec
+
 from streamlit_webrtc import webrtc_streamer
 import av
 import numpy as np
