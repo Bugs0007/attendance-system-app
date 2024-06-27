@@ -22,6 +22,7 @@
       #  st.experimental_rerun()
 import streamlit as st
 from auth import authenticate
+import face_rec 
 from Real_Time_Prediction import run_realtime_prediction_page
 from Registration_form import run_registration_form_page
 from Report import run_report_page
