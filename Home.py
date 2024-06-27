@@ -22,9 +22,8 @@
       #  st.experimental_rerun()
 import streamlit as st
 from auth import authenticate
-from Home import face_rec
 from 1_Real_Time_Prediction import run_realtime_prediction_page
-from 2_Registration_Form import run_register_page
+from 2_Registration_form import run_registration_form_page
 from 3_Report import run_report_page
 
 # Check if the user is authenticated
@@ -36,12 +35,15 @@ if not st.session_state['authenticated']:
 else:
     st.set_page_config(page_title='Attendance System', layout='wide')
 
-    # Sidebar navigation
-    page_selection = st.sidebar.radio('Navigation', ['Real-Time Prediction', 'Registration Form', 'Attendance Reporting'])
+    page_selection = st.sidebar.radio('Select a page:', ['Real-Time Prediction', 'Registration Form', 'Attendance Report'])
 
     if page_selection == 'Real-Time Prediction':
-        run_realtime_prediction_page(face_rec)
+        run_realtime_prediction_page()
     elif page_selection == 'Registration Form':
-        run_register_page(face_rec)
-    elif page_selection == 'Attendance Reporting':
-        run_report_page(face_rec)
+        run_registration_form_page()
+    elif page_selection == 'Attendance Report':
+        run_report_page()
+
+    if st.sidebar.button("Logout"):
+        st.session_state['authenticated'] = False
+        st.experimental_rerun()
