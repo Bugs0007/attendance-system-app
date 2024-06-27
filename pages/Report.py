@@ -158,8 +158,8 @@ import streamlit as st
 import datetime
 
 def run_report_page(face_rec):
-    # Set page title and layout
-    #st.set_page_config(page_title='Attendance Reporting', layout='wide')
+    
+    
     st.title('Attendance Reporting')
 
     # Function to retrieve logs from Redis
