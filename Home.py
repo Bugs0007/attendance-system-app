@@ -22,9 +22,9 @@
       #  st.experimental_rerun()
 import streamlit as st
 from auth import authenticate
-from 1_Real_Time_Prediction import run_realtime_prediction_page
-from 2_Registration_form import run_registration_form_page
-from 3_Report import run_report_page
+from Real_Time_Prediction import run_realtime_prediction_page
+from Registration_form import run_registration_form_page
+from Report import run_report_page
 
 # Check if the user is authenticated
 if 'authenticated' not in st.session_state:
