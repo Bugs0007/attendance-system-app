@@ -5,8 +5,7 @@ import cv2
 import numpy as np
 from streamlit_webrtc import webrtc_streamer
 import av
-def run_register_page(face_rec):
-
+def run_register_page():
 st.subheader('Registration Form')
 
 ## init registration form
