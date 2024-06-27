@@ -3,7 +3,6 @@ import streamlit as st
 # User credentials
 credentials = {
     "teacher1": "123"
-    "teacher2": "234"
 }
 
 def authenticate():
