@@ -1,14 +1,22 @@
 import streamlit as st
-from auth import authenticator
-st.set_page_config(page_title='Attendance System',layout='wide')
+from auth import authenticate 
 
+# Check if the user is authenticated
+if 'authenticated' not in st.session_state:
+    st.session_state['authenticated'] = False
 
+if not st.session_state['authenticated']:
+    authenticate()
+else:
+    st.set_page_config(page_title='Attendance System', layout='wide')
 
-with st.spinner("Initializing face recognition components"):
-    import face_rec
+    with st.spinner("Initializing face recognition components"):
+        import face_rec  # Importing face_rec module inside the else block
 
+    st.header('Attendance System using Face Recognition')
+    st.success('Model loaded successfully')
+    st.success('Redis db successfully connected')
 
-st.header('Attendance System using Face Recognition')
-
-st.success('Model loaded sucesfully')
-st.success('Redis db sucessfully connected')
+    if st.sidebar.button("Logout"):
+        st.session_state['authenticated'] = False
+        st.experimental_rerun()
