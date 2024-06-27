@@ -20,3 +20,13 @@ else:
     if st.sidebar.button("Logout"):
         st.session_state['authenticated'] = False
         st.experimental_rerun()
+///////
+from flask import Flask, render_template, redirect, url_for, session
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'
+
+@app.route('/')
+def home():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return render_template('home.html')
