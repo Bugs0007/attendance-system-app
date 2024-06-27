@@ -1,5 +1,5 @@
 import streamlit as st
-# from auth import authenticator
+from auth import authenticator
 st.set_page_config(page_title='Attendance System',layout='wide')
 
 
