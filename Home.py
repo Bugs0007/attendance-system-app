@@ -72,11 +72,11 @@ else:
     page_selection = st.sidebar.radio('Select a page:', ['Real-Time Prediction', 'Registration Form', 'Attendance Report'])
 
     if page_selection == 'Real-Time Prediction':
-        run_realtime_prediction_page()
+        run_realtime_prediction_page(face_rec)
     elif page_selection == 'Registration Form':
-        run_register_page()
+        run_register_page(face_rec)
     elif page_selection == 'Attendance Report':
-        run_report_page()
+        run_report_page(face_rec)
 
     if st.sidebar.button("Logout"):
         st.session_state['authenticated'] = False
