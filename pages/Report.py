@@ -154,7 +154,7 @@
 #         st.dataframe(filtered_report_df)
 import pandas as pd
 import streamlit as st
-from Home import face_rec
+
 import datetime
 
 def run_report_page():
