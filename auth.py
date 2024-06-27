@@ -2,7 +2,7 @@ import streamlit as st
 
 # User credentials
 credentials = {
-    "teacher1@gmail.com": "1234567890"
+    "teacher1@gmail.com": "123"
 }
 
 def authenticate():
