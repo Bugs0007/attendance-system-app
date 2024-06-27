@@ -1,7 +1,6 @@
 import pandas as pd
 import streamlit as st
 import datetime
-
 def run_report_page(face_rec):
     
     
