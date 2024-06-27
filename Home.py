@@ -60,6 +60,10 @@ from pages.Real_Time_Prediction import run_realtime_prediction_page
 from pages.Registration_form import run_register_page
 from pages.Report import run_report_page
 import face_rec
+
+# Set page configuration
+st.set_page_config(page_title='Attendance System', layout='wide')
+
 # Check if the user is authenticated
 if 'authenticated' not in st.session_state:
     st.session_state['authenticated'] = False
@@ -67,8 +71,6 @@ if 'authenticated' not in st.session_state:
 if not st.session_state['authenticated']:
     authenticate()
 else:
-    st.set_page_config(page_title='Attendance System', layout='wide')
-
     page_selection = st.sidebar.radio('Select a page:', ['Real-Time Prediction', 'Registration Form', 'Attendance Report'])
 
     if page_selection == 'Real-Time Prediction':
