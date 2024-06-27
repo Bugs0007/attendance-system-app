@@ -1,4 +1,4 @@
-def run_report_page(face_rec):
+
 # import pandas as pd
 # import streamlit as st
 # from Home import face_rec
@@ -175,7 +175,7 @@ import pandas as pd
 import streamlit as st
 from Home import face_rec
 import datetime
-
+def run_report_page(face_rec):
 # Set page title and layout
 st.set_page_config(page_title='Attendance Reporting', layout='wide')
 st.title('Attendance Reporting')
