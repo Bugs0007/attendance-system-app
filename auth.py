@@ -1,26 +1,18 @@
 import streamlit as st
-import streamlit_authenticator as stauth
-import yaml
-from yaml.loader import SafeLoader
 
-with open('./config.yaml') as file:
-    config = yaml.load(file, Loader=SafeLoader)
+# User credentials
+credentials = {
+    "teacher1@gmail.com": "1234567890"
+}
 
-authenticator = stauth.Authenticate(
-    config['credentials'],
-    config['cookie']['name'],
-    config['cookie']['key'],
-    config['cookie']['expiry_days'],
-    config['preauthorized']
-)
-
-authenticator.login('Login', 'main')
-
-if st.session_state["authentication_status"]:
-    authenticator.logout('Logout', 'sidebar', key='unique_key')
-    st.write(f'Welcome *{st.session_state["name"]}*')
-    st.title('Some content')
-elif st.session_state["authentication_status"] is False:
-    st.error('Username/password is incorrect')
-elif st.session_state["authentication_status"] is None:
-    st.warning('Please enter your username and password')
+def authenticate():
+    st.sidebar.title("Login")
+    email = st.sidebar.text_input("Email")
+    password = st.sidebar.text_input("Password", type="password")
+    
+    if st.sidebar.button("Login"):
+        if email in credentials and credentials[email] == password:
+            st.session_state['authenticated'] = True
+            st.sidebar.success("Authenticated")
+        else:
+            st.sidebar.error("Invalid email or password")
