@@ -1,3 +1,4 @@
+def run_report_page(face_rec):
 # import pandas as pd
 # import streamlit as st
 # from Home import face_rec
