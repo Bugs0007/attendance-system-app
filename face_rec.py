@@ -19,7 +19,7 @@ r=redis.StrictRedis(host='redis-18195.c301.ap-south-1-1.ec2.redns.redis-cloud.co
 
 
 # Retrive Data from database
-def retrive_data(name):
+def retrieve_data(name):
     retrive_dict= r.hgetall(name)
     retrive_series = pd.Series(retrive_dict)
     retrive_series = retrive_series.apply(lambda x: np.frombuffer(x,dtype=np.float32))
