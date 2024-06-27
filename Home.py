@@ -53,7 +53,7 @@
 # Home.py
 
 import streamlit as st
-import face_rec  # Assuming face_rec is imported here
+from face_rec import retrive_data
 from pages.Real_Time_Prediction import run_realtime_prediction_page
 from pages.Registration_form import run_register_page
 from pages.Report import run_report_page
