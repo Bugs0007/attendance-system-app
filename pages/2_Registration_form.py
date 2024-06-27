@@ -1,11 +1,11 @@
-def run_register_page(face_rec):
+
 import streamlit as st
 from Home import face_rec
 import cv2
 import numpy as np
 from streamlit_webrtc import webrtc_streamer
 import av
-
+def run_register_page(face_rec):
 
 st.subheader('Registration Form')
 
