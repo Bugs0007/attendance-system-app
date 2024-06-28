@@ -4,14 +4,14 @@ import av
 import time
 
 def run_realtime_prediction_page(face_rec):
-    st.subheader('Real-Time Attendance System')
+    st.subheader('Face Attendance')
 
     # Retrieve the data from Redis Database
     with st.spinner('Retrieving Data from Redis DB ...'):
         redis_face_db = face_rec.retrieve_data(name='academy:register')
         st.dataframe(redis_face_db)
 
-    st.success("Data successfully retrieved from Redis")
+    st.success("You can go now proceed to mark your attendance")
 
     # Time settings
     waitTime = 5  # time in seconds
