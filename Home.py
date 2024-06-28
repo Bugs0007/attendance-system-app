@@ -12,7 +12,7 @@ def local_css(file_name):
 local_css("styles.css")
 
 # Set page configuration
-st.set_page_config(page_title='Attendance System', layout='wide')
+#st.set_page_config(page_title='Attendance System', layout='wide')
 
 # Check if the user is authenticated
 if 'authenticated' not in st.session_state:
