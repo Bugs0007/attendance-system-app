@@ -55,7 +55,7 @@ if not st.session_state['authenticated']:
 else:
     # Your existing Streamlit code
     st.sidebar.title("Navigation")
-    menu = ["Home", "Real-Time Prediction", "Register", "Report"]
+    menu = ["Real-Time Prediction", "Register", "Report"]
     choice = st.sidebar.selectbox("Menu", menu)
     
     # Add a logout button
