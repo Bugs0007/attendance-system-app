@@ -15,13 +15,14 @@
 # # Define CSS to center elements
 # centered_css = """
 #     <style>
-#     .centered {
+#     html, body, .centered-container {
+#         height: 100%;
+#         margin: 0;
 #         display: flex;
 #         justify-content: center;
 #         align-items: center;
-#         height: 100vh;
 #     }
-#     .centered .auth-form {
+#     .auth-form {
 #         background-color: white;
 #         padding: 20px;
 #         border-radius: 10px;
@@ -40,7 +41,7 @@
 #     st.session_state['authenticated'] = False
 
 # if not st.session_state['authenticated']:
-#     st.markdown('<div class="centered"><div class="auth-form">', unsafe_allow_html=True)
+#     st.markdown('<div class="centered-container"><div class="auth-form">', unsafe_allow_html=True)
 #     st.write("Please authenticate to continue")
 #     username = st.text_input("Username")
 #     password = st.text_input("Password", type="password")
@@ -83,7 +84,6 @@
 #         st.title("Report")
 #         run_report_page(face_rec)
 #         # Include more content here
-
 import streamlit as st
 from auth import authenticate  # Ensure this import matches your project structure
 import face_rec  # Ensure this import matches your project structure
