@@ -63,16 +63,16 @@ else:
         st.session_state['authenticated'] = False
         st.experimental_rerun()
 
-    if choice == "Home":
-        st.title("Attendance System Home")
-        st.markdown("### Welcome to the Attendance System Application")
-        st.markdown("""
-        <div style="background-color: white; padding: 10px; border-radius: 10px;">
-            <h2>Welcome!</h2>
-            <p>This is a simple attendance system using face recognition.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    elif choice == "Real-Time Prediction":
+    if choice == "Real-Time Prediction":
+    #     st.title("Attendance System Home")
+    #     st.markdown("### Welcome to the Attendance System Application")
+    #     st.markdown("""
+    #     <div style="background-color: white; padding: 10px; border-radius: 10px;">
+    #         <h2>Welcome!</h2>
+    #         <p>This is a simple attendance system using face recognition.</p>
+    #     </div>
+    #     """, unsafe_allow_html=True)
+    # elif choice == "Real-Time Prediction":
         st.title("Real-Time Prediction")
         run_realtime_prediction_page(face_rec)
         # Include more content here
