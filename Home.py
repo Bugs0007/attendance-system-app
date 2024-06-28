@@ -53,13 +53,15 @@ centered_css = """
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        min-height: 100vh;
     }
     .centered .auth-form {
         background-color: white;
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        text-align: center;
     }
     </style>
 """
@@ -68,20 +70,20 @@ centered_css = """
 st.markdown(centered_css, unsafe_allow_html=True)
 
 # Authentication logic
-user_authenticated = False  # Replace with actual authentication check
+if 'authenticated' not in st.session_state:
+    st.session_state['authenticated'] = False
 
-if not user_authenticated:
+if not st.session_state['authenticated']:
     st.markdown('<div class="centered"><div class="auth-form">', unsafe_allow_html=True)
     st.write("Please authenticate to continue")
-    # Include your authentication form here
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     if st.button("Login"):
-        user_authenticated = authenticate(username, password)  # Your authentication logic
-        if user_authenticated:
+        if authenticate(username, password):  # Your authentication logic
             st.success("Authenticated successfully")
+            st.experimental_rerun()  # Rerun the app to apply the authenticated state
         else:
-            st.error("Authentication failed")
+            st.error("Invalid username or password")
     st.markdown('</div></div>', unsafe_allow_html=True)
 else:
     # Your existing Streamlit code
