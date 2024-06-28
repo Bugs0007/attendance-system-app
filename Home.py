@@ -114,7 +114,6 @@ centered_css = """
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         width: 300px;
         text-align: center;
-        margin: auto;
     }
     </style>
 """
@@ -138,7 +137,8 @@ if not st.session_state['authenticated']:
             st.session_state['authenticated'] = True
         else:
             st.error("Invalid username or password")
-    st.markdown('</div></div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)  # Close auth-form div
+    st.markdown('</div>', unsafe_allow_html=True)  # Close centered-container div
 else:
     # Your existing Streamlit code
     st.sidebar.title("Navigation")
