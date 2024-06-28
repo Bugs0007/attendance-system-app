@@ -5,6 +5,12 @@ from pages.Registration_form import run_register_page
 from pages.Report import run_report_page
 import face_rec
 
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+local_css("styles.css")
+
 # Set page configuration
 st.set_page_config(page_title='Attendance System', layout='wide')
 
