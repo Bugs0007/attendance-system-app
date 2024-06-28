@@ -101,9 +101,8 @@ local_css("styles.css")
 # Define CSS to center elements
 centered_css = """
     <style>
-    html, body, .centered-container {
-        height: 100%;
-        margin: 0;
+    .centered-container {
+        height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
