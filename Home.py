@@ -102,10 +102,10 @@ local_css("styles.css")
 centered_css = """
     <style>
     .centered-container {
-        height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 100vh;
     }
     .auth-form {
         background-color: white;
