@@ -133,7 +133,7 @@ if not st.session_state['authenticated']:
     if st.button("Login"):
         if authenticate(username, password):  # Your authentication logic
             st.success("Authenticated successfully")
-            st.experimental_rerun()  # Rerun the app to apply the authenticated state
+            st.session_state['authenticated'] = True
         else:
             st.error("Invalid username or password")
     st.markdown('</div></div>', unsafe_allow_html=True)
