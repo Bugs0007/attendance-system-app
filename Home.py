@@ -102,13 +102,13 @@ else:
         """, unsafe_allow_html=True)
     elif choice == "Real-Time Prediction":
         st.title("Real-Time Prediction")
-        st.markdown("### Predict Attendance in Real-Time")
+        run_realtime_prediction_page(face_rec)
         # Include more content here
     elif choice == "Register":
         st.title("Register")
-        st.markdown("### Register New Users")
+        run_register_page(face_rec)
         # Include more content here
     elif choice == "Report":
         st.title("Report")
-        st.markdown("### Attendance Reports")
+        run_report_page(face_rec)
         # Include more content here
