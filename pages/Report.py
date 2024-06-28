@@ -4,7 +4,7 @@ import datetime
 def run_report_page(face_rec):
     
     
-    st.title('Attendance Reporting')
+    st.title('Attendance Register')
 
     # Function to retrieve logs from Redis
     def load_logs(name, end=-1):
