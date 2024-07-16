@@ -241,6 +241,9 @@ def retrieve_data(name):
     # Apply the splitting function and expand the result into separate columns
     retrive_df[['Name', 'Role']] = retrive_df['name_role'].apply(lambda x: pd.Series(split_name_role(x)))
 
+    # Ensure 'Role' column is of object type to handle None values
+    retrive_df['Role'] = retrive_df['Role'].astype('object')
+
     return retrive_df[['Name', 'Role', 'facial_features']]
 
 
