@@ -94,39 +94,22 @@ from pages.Real_Time_Prediction import run_realtime_prediction_page
 from pages.Registration_form import run_register_page
 from pages.Report import run_report_page
 
+# Hide the top bar
+hide_streamlit_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 # Apply local CSS
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 local_css("styles.css")
-
-# Define CSS to center elements
-centered_css = """
-    <style>
-    html, body, .centered-container {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #1E1E1E;  /* Match the background color */
-    }
-    .auth-form {
-        background-color: #2D2D2D;  /* Match the form background color */
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        width: 300px;
-        text-align: center;
-        color: white;
-    }
-    </style>
-"""
-
-# Display centered CSS
-st.markdown(centered_css, unsafe_allow_html=True)
 
 # Authentication logic
 if 'authenticated' not in st.session_state:
@@ -147,21 +130,25 @@ if not st.session_state['authenticated']:
 else:
     # Your existing Streamlit code
     st.sidebar.title("Navigation")
-    menu = ["Real-Time Prediction", "Register", "Report"]
-    choice = st.sidebar.selectbox("Menu", menu)
+    
+    # Replace dropdown with buttons
+    st.sidebar.write("Menu:")
+    
+    if st.sidebar.button("Real-Time Prediction"):
+        st.title("Real-Time Prediction")
+        run_realtime_prediction_page(face_rec)
+    
+    if st.sidebar.button("Register"):
+        st.title("Register")
+        run_register_page(face_rec)
+    
+    if st.sidebar.button("Report"):
+        st.title("Report")
+        run_report_page(face_rec)
     
     # Add a logout button
     if st.sidebar.button("Logout"):
         st.session_state['authenticated'] = False
         st.experimental_rerun()
 
-    if choice == "Real-Time Prediction":
-        st.title("Real-Time Prediction")
-        run_realtime_prediction_page(face_rec)
-    elif choice == "Register":
-        st.title("Register")
-        run_register_page(face_rec)
-    elif choice == "Report":
-        st.title("Report")
-        run_report_page(face_rec)
 
