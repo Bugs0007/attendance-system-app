@@ -172,15 +172,23 @@ else:
     # Display buttons in the sidebar
     st.sidebar.title("Navigation")
     
-    if st.sidebar.button("Real-Time Prediction"):
+    # Display buttons under Home
+    menu = ["Home", "Real-Time Prediction", "Register", "Report"]
+    choice = st.sidebar.radio("Menu", menu)
+
+    if choice == "Home":
+        st.title("Home")
+        st.write("Welcome to the Attendance System")
+    
+    elif choice == "Real-Time Prediction":
         st.title("Real-Time Prediction")
         run_realtime_prediction_page(face_rec)
     
-    if st.sidebar.button("Register"):
+    elif choice == "Register":
         st.title("Register")
         run_register_page(face_rec)
     
-    if st.sidebar.button("Report"):
+    elif choice == "Report":
         st.title("Report")
         run_report_page(face_rec)
     
@@ -188,4 +196,3 @@ else:
     if st.sidebar.button("Logout"):
         st.session_state['authenticated'] = False
         st.experimental_rerun()
-
