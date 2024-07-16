@@ -22,6 +22,7 @@ body {
 } */
 
 /* Centering the login form */
+/* Centering the login form */
 html, body, .centered-container {
     height: 100%;
     margin: 0;
@@ -55,13 +56,8 @@ header {
     visibility: hidden;
 }
 
-/* Additional styling for buttons in the sidebar */
-.css-1v0mbdj {
-    text-align: center;
-    padding: 10px;
-}
-
-.css-1v0mbdj button {
+/* Additional styling for buttons */
+button {
     width: 100%;
     background-color: #2D2D2D;
     color: white;
@@ -70,8 +66,10 @@ header {
     padding: 10px;
     margin: 5px 0;
     cursor: pointer;
+    text-align: center;
 }
 
-.css-1v0mbdj button:hover {
+button:hover {
     background-color: #3E3E3E;
 }
+
