@@ -21,31 +21,57 @@ body {
     border-left: 5px solid #4CAF50;
 } */
 
-@import url('https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
-
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #1E1E1E;  /* Match the background color */
+/* Centering the login form */
+html, body, .centered-container {
+    height: 100%;
     margin: 0;
     padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1E1E1E;  /* Match the background color */
 }
 
-.stButton>button {
-    background-color: #4CAF50;
+.auth-form {
+    background-color: #2D2D2D;  /* Match the form background color */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+    color: white;
+}
+
+/* Style for hiding Streamlit's top bar and footer */
+#MainMenu {
+    visibility: hidden;
+}
+
+footer {
+    visibility: hidden;
+}
+
+header {
+    visibility: hidden;
+}
+
+/* Additional styling for buttons in the sidebar */
+.css-1v0mbdj {
+    text-align: center;
+    padding: 10px;
+}
+
+.css-1v0mbdj button {
+    width: 100%;
+    background-color: #2D2D2D;
     color: white;
     border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0;
     cursor: pointer;
-    border-radius: 8px;
 }
 
-.stAlert {
-    border-left: 5px solid #4CAF50;
+.css-1v0mbdj button:hover {
+    background-color: #3E3E3E;
 }
-
-
