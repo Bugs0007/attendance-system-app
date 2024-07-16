@@ -111,6 +111,33 @@ def local_css(file_name):
 
 local_css("styles.css")
 
+# Define CSS to center elements
+centered_css = """
+    <style>
+    html, body, .centered-container {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1E1E1E;  /* Match the background color */
+    }
+    .auth-form {
+        background-color: #2D2D2D;  /* Match the form background color */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        text-align: center;
+        color: white;
+    }
+    </style>
+"""
+
+# Display centered CSS
+st.markdown(centered_css, unsafe_allow_html=True)
+
 # Authentication logic
 if 'authenticated' not in st.session_state:
     st.session_state['authenticated'] = False
@@ -129,26 +156,22 @@ if not st.session_state['authenticated']:
     st.markdown('</div></div>', unsafe_allow_html=True)
 else:
     # Your existing Streamlit code
-    st.sidebar.title("Navigation")
-    
+    st.title("Navigation")
+
     # Replace dropdown with buttons
-    st.sidebar.write("Menu:")
-    
-    if st.sidebar.button("Real-Time Prediction"):
+    if st.button("Real-Time Prediction"):
         st.title("Real-Time Prediction")
         run_realtime_prediction_page(face_rec)
     
-    if st.sidebar.button("Register"):
+    if st.button("Register"):
         st.title("Register")
         run_register_page(face_rec)
     
-    if st.sidebar.button("Report"):
+    if st.button("Report"):
         st.title("Report")
         run_report_page(face_rec)
     
     # Add a logout button
-    if st.sidebar.button("Logout"):
+    if st.button("Logout"):
         st.session_state['authenticated'] = False
         st.experimental_rerun()
-
-
