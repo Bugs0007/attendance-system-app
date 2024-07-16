@@ -176,7 +176,7 @@ else:
     menu = ["Home", "Real-Time Prediction", "Register", "Report"]
     choice = st.sidebar.radio("Menu", menu)
     
-    elif choice == "Real-Time Prediction":
+    if choice == "Real-Time Prediction":
         st.title("Real-Time Prediction")
         run_realtime_prediction_page(face_rec)
     
