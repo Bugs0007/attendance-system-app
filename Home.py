@@ -181,15 +181,12 @@ else:
         st.write("Welcome to the Attendance System")
     
     elif choice == "Real-Time Prediction":
-        st.title("Real-Time Prediction")
         run_realtime_prediction_page(face_rec)
     
     elif choice == "Register":
-        st.title("Register")
         run_register_page(face_rec)
     
     elif choice == "Report":
-        st.title("Report")
         run_report_page(face_rec)
     
     # Add a logout button
