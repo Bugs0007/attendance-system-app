@@ -202,12 +202,9 @@ import numpy as np
 import pandas as pd
 import cv2
 import redis
-
-# Insight face
 from insightface.app import FaceAnalysis
 from sklearn.metrics import pairwise
 from datetime import datetime
-
 import os
 
 # Redis connection
@@ -236,7 +233,13 @@ def retrieve_data(name):
         else:
             return ['Unknown', 'Unknown']
 
-    retrive_df[['Name', 'Role']] = retrive_df['name_role'].apply(split_name_role).apply(pd.Series)
+    split_df = retrive_df['name_role'].apply(split_name_role).apply(pd.Series)
+    retrive_df[['Name', 'Role']] = split_df
+    
+    print("Debugging Info:")
+    print(f"retrive_df:\n{retrive_df}")
+    print(f"split_df:\n{split_df}")
+
     return retrive_df[['Name', 'Role', 'facial_features']]
 
 # Configure face analysis
