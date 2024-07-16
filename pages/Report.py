@@ -151,6 +151,84 @@
 #         if st.button('Submit'):
 #             filtered_report_df = filter_student_attendance(date_in, name_in, role_in, status_in)
 #             st.dataframe(filtered_report_df)
+# import streamlit as st
+# import pandas as pd
+# import redis
+# from datetime import datetime
+
+# # Redis connection
+# r = redis.StrictRedis(
+#     host='redis-18549.c322.us-east-1-2.ec2.redns.redis-cloud.com',
+#     port=18549,
+#     password='0CMhOIkl2gHDzNWiMnIvPgEtDpDhBheB'
+# )
+
+# # Function to generate attendance report
+# def generate_attendance_report():
+#     # Assuming you have a way to retrieve logs from your Redis database
+#     logs = r.lrange('attendance:logs', 0, -1)
+#     logs_data = [log.decode().split('@') for log in logs]
+    
+#     logs_df = pd.DataFrame(logs_data, columns=['Name', 'Role', 'Date'])
+#     logs_df['Date'] = pd.to_datetime(logs_df['Date'], errors='coerce')
+
+#     # Filter out rows with missing dates
+#     logs_df = logs_df.dropna(subset=['Date'])
+
+#     if logs_df.empty:
+#         return pd.DataFrame(columns=['Date', 'Name', 'Role'])
+
+#     # Ensure valid date range
+#     min_date = logs_df['Date'].min()
+#     max_date = logs_df['Date'].max()
+    
+#     if pd.isna(min_date) or pd.isna(max_date):
+#         raise ValueError("Cannot generate date range with missing dates")
+
+#     all_dates = pd.date_range(start=min_date, end=max_date, freq='D').date
+
+#     report_data = []
+#     for date in all_dates:
+#         daily_logs = logs_df[logs_df['Date'].dt.date == date]
+#         for _, row in daily_logs.iterrows():
+#             report_data.append([date, row['Name'], row['Role']])
+
+#     report_df = pd.DataFrame(report_data, columns=['Date', 'Name', 'Role'])
+#     return report_df
+
+# # Function to run the report page
+# def run_report_page(face_rec):
+#     st.title("Attendance Report")
+
+#     # Generate the attendance report
+#     try:
+#         report_df = generate_attendance_report()
+#     except ValueError as e:
+#         st.error(str(e))
+#         return
+
+#     st.write("### Attendance Data")
+#     st.dataframe(report_df)
+
+#     # Plot the attendance data
+#     if not report_df.empty:
+#         attendance_summary = report_df.groupby(['Date', 'Name']).size().unstack(fill_value=0)
+#         st.write("### Attendance Summary")
+#         st.dataframe(attendance_summary)
+
+#     # Download the report
+#     if not report_df.empty:
+#         csv = report_df.to_csv(index=False).encode('utf-8')
+#         st.download_button(
+#             label="Download attendance report as CSV",
+#             data=csv,
+#             file_name='attendance_report.csv',
+#             mime='text/csv',
+#         )
+
+# # Run the Streamlit app
+# if __name__ == '__main__':
+#     run_report_page(face_rec)
 import streamlit as st
 import pandas as pd
 import redis
@@ -163,7 +241,6 @@ r = redis.StrictRedis(
     password='0CMhOIkl2gHDzNWiMnIvPgEtDpDhBheB'
 )
 
-# Function to generate attendance report
 def generate_attendance_report():
     # Assuming you have a way to retrieve logs from your Redis database
     logs = r.lrange('attendance:logs', 0, -1)
@@ -196,7 +273,6 @@ def generate_attendance_report():
     report_df = pd.DataFrame(report_data, columns=['Date', 'Name', 'Role'])
     return report_df
 
-# Function to run the report page
 def run_report_page(face_rec):
     st.title("Attendance Report")
 
@@ -226,6 +302,8 @@ def run_report_page(face_rec):
             mime='text/csv',
         )
 
-# Run the Streamlit app
-if __name__ == '__main__':
+def main():
     run_report_page(face_rec)
+
+if __name__ == "__main__":
+    main()
