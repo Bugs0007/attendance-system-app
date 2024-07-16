@@ -17,80 +17,46 @@ def run_report_page(face_rec):
 
     # Function to process logs and generate attendance report
     
-    # def generate_attendance_report():
-    #     logs_list = load_logs(name='attendance:logs')
-
-    #     # Convert logs to DataFrame
-    #     convert_byte_to_string = lambda x: x.decode('utf-8')
-    #     logs_list_string = list(map(convert_byte_to_string, logs_list))
-    #     split_string = lambda x: x.split('@')
-    #     logs_nested_list = list(map(split_string, logs_list_string))
-    #     logs_df = pd.DataFrame(logs_nested_list, columns=['Name', 'Role', 'Timestamp'])
-
-    #     # Clean and process timestamp data
-    #     logs_df['Timestamp'] = logs_df['Timestamp'].apply(lambda x: x.split('.')[0])
-    #     logs_df['Timestamp'] = pd.to_datetime(logs_df['Timestamp'])
-    #     logs_df['Date'] = logs_df['Timestamp'].dt.date
-
-    #     # Generate all possible date and role combinations
-    #     all_dates = pd.date_range(start=logs_df['Date'].min(), end=logs_df['Date'].max(), freq='D').date
-    #     registered_students = retrieve_registered_data()
-
-    #     # Ensure all registered students are included in the report
-    #     attendance_report_data = []
-    #     for name, role in registered_students[['Name', 'Role']].values:
-    #         for dt in all_dates:
-    #             attendance_report_data.append({'Date': dt, 'Name': name, 'Role': role})
-
-    #     # Convert to DataFrame
-    #     attendance_report_df = pd.DataFrame(attendance_report_data)
-
-    #     # Merge with logs_df to determine attendance status
-    #     attendance_report_df = pd.merge(attendance_report_df, logs_df, how='left', on=['Date', 'Name', 'Role'])
-    #     attendance_report_df['Status'] = attendance_report_df['Timestamp'].apply(lambda x: 'Present' if pd.notnull(x) else 'Absent')
-
-    #     # Pivot table to display attendance report
-    #     pivot_df = attendance_report_df.pivot_table(index=['Name', 'Role'], columns='Date', values='Status', aggfunc='first', fill_value='Absent')
-    #     pivot_df = pivot_df.reset_index()
-    #     pivot_df.index += 1
-    #     pivot_df.index.name = 'Serial No.'
-
-    #     return pivot_df
     def generate_attendance_report():
-    # Assuming you have a way to retrieve logs from your Redis database
-    logs = r.lrange('attendance:logs', 0, -1)
-    logs_data = [log.decode().split('@') for log in logs]
-    
-    logs_df = pd.DataFrame(logs_data, columns=['Name', 'Role', 'Date'])
-    logs_df['Date'] = pd.to_datetime(logs_df['Date'], errors='coerce')
+        logs_list = load_logs(name='attendance:logs')
 
-    # Filter out rows with missing dates
-    logs_df = logs_df.dropna(subset=['Date'])
+        # Convert logs to DataFrame
+        convert_byte_to_string = lambda x: x.decode('utf-8')
+        logs_list_string = list(map(convert_byte_to_string, logs_list))
+        split_string = lambda x: x.split('@')
+        logs_nested_list = list(map(split_string, logs_list_string))
+        logs_df = pd.DataFrame(logs_nested_list, columns=['Name', 'Role', 'Timestamp'])
 
-    if logs_df.empty:
-        return pd.DataFrame(columns=['Date', 'Name', 'Role'])
+        # Clean and process timestamp data
+        logs_df['Timestamp'] = logs_df['Timestamp'].apply(lambda x: x.split('.')[0])
+        logs_df['Timestamp'] = pd.to_datetime(logs_df['Timestamp'])
+        logs_df['Date'] = logs_df['Timestamp'].dt.date
 
-    # Ensure valid date range
-    min_date = logs_df['Date'].min()
-    max_date = logs_df['Date'].max()
-    
-    if pd.isna(min_date) or pd.isna(max_date):
-        raise ValueError("Cannot generate date range with missing dates")
+        # Generate all possible date and role combinations
+        all_dates = pd.date_range(start=logs_df['Date'].min(), end=logs_df['Date'].max(), freq='D').date
+        registered_students = retrieve_registered_data()
 
-    all_dates = pd.date_range(start=min_date, end=max_date, freq='D').date
+        # Ensure all registered students are included in the report
+        attendance_report_data = []
+        for name, role in registered_students[['Name', 'Role']].values:
+            for dt in all_dates:
+                attendance_report_data.append({'Date': dt, 'Name': name, 'Role': role})
 
-    report_data = []
-    for date in all_dates:
-        daily_logs = logs_df[logs_df['Date'].dt.date == date]
-        for _, row in daily_logs.iterrows():
-            report_data.append([date, row['Name'], row['Role']])
+        # Convert to DataFrame
+        attendance_report_df = pd.DataFrame(attendance_report_data)
 
-    pivot_df = attendance_report_df.pivot_table(index=['Name', 'Role'], columns='Date', values='Status', aggfunc='first', fill_value='Absent')
+        # Merge with logs_df to determine attendance status
+        attendance_report_df = pd.merge(attendance_report_df, logs_df, how='left', on=['Date', 'Name', 'Role'])
+        attendance_report_df['Status'] = attendance_report_df['Timestamp'].apply(lambda x: 'Present' if pd.notnull(x) else 'Absent')
+
+        # Pivot table to display attendance report
+        pivot_df = attendance_report_df.pivot_table(index=['Name', 'Role'], columns='Date', values='Status', aggfunc='first', fill_value='Absent')
         pivot_df = pivot_df.reset_index()
         pivot_df.index += 1
         pivot_df.index.name = 'Serial No.'
 
         return pivot_df
+    
 
     # Function to filter student attendance
     def filter_student_attendance(date_in, name_in, role_in, status_in):
