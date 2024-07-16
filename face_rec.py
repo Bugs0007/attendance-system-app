@@ -230,22 +230,16 @@ def retrieve_data(name):
     retrive_df = retrive_series.to_frame().reset_index()
     retrive_df.columns = ['name_role', 'facial_features']
 
-    # Print the DataFrame for debugging
-    print("Retrieved DataFrame:\n", retrive_df)
-
     # Ensure splitting handles cases with and without the '@' character
     def split_name_role(name_role):
         parts = name_role.split('@')
-        if len(parts) == 2:
-            return parts[0], parts[1]
+        if len(parts) >= 2:
+            return parts[0], '@'.join(parts[1:])
         else:
             return parts[0], None
 
     # Apply the splitting function and expand the result into separate columns
     retrive_df[['Name', 'Role']] = retrive_df['name_role'].apply(lambda x: pd.Series(split_name_role(x)))
-
-    # Print the DataFrame after splitting for debugging
-    print("DataFrame after splitting:\n", retrive_df)
 
     return retrive_df[['Name', 'Role', 'facial_features']]
 
