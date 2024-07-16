@@ -151,19 +151,19 @@
 #         if st.button('Submit'):
 #             filtered_report_df = filter_student_attendance(date_in, name_in, role_in, status_in)
 #             st.dataframe(filtered_report_df)
-# import streamlit as st
-# import pandas as pd
-# import redis
-# from datetime import datetime
+import streamlit as st
+import pandas as pd
+import redis
+from datetime import datetime
 
-# # Redis connection
-# r = redis.StrictRedis(
-#     host='redis-18549.c322.us-east-1-2.ec2.redns.redis-cloud.com',
-#     port=18549,
-#     password='0CMhOIkl2gHDzNWiMnIvPgEtDpDhBheB'
-# )
+# Redis connection
+r = redis.StrictRedis(
+    host='redis-18549.c322.us-east-1-2.ec2.redns.redis-cloud.com',
+    port=18549,
+    password='0CMhOIkl2gHDzNWiMnIvPgEtDpDhBheB'
+)
 
-# # Function to generate attendance report
+# Function to generate attendance report
 # def generate_attendance_report():
 #     # Assuming you have a way to retrieve logs from your Redis database
 #     logs = r.lrange('attendance:logs', 0, -1)
@@ -195,51 +195,7 @@
 
 #     report_df = pd.DataFrame(report_data, columns=['Date', 'Name', 'Role'])
 #     return report_df
-
-# # Function to run the report page
-# def run_report_page(face_rec):
-#     st.title("Attendance Report")
-
-#     # Generate the attendance report
-#     try:
-#         report_df = generate_attendance_report()
-#     except ValueError as e:
-#         st.error(str(e))
-#         return
-
-#     st.write("### Attendance Data")
-#     st.dataframe(report_df)
-
-#     # Plot the attendance data
-#     if not report_df.empty:
-#         attendance_summary = report_df.groupby(['Date', 'Name']).size().unstack(fill_value=0)
-#         st.write("### Attendance Summary")
-#         st.dataframe(attendance_summary)
-
-#     # Download the report
-#     if not report_df.empty:
-#         csv = report_df.to_csv(index=False).encode('utf-8')
-#         st.download_button(
-#             label="Download attendance report as CSV",
-#             data=csv,
-#             file_name='attendance_report.csv',
-#             mime='text/csv',
-#         )
-
-# # Run the Streamlit app
-# if __name__ == '__main__':
-#     run_report_page(face_rec)
-import streamlit as st
 import pandas as pd
-import redis
-from datetime import datetime
-
-# Redis connection
-r = redis.StrictRedis(
-    host='redis-18549.c322.us-east-1-2.ec2.redns.redis-cloud.com',
-    port=18549,
-    password='0CMhOIkl2gHDzNWiMnIvPgEtDpDhBheB'
-)
 
 def generate_attendance_report():
     # Assuming you have a way to retrieve logs from your Redis database
@@ -273,6 +229,7 @@ def generate_attendance_report():
     report_df = pd.DataFrame(report_data, columns=['Date', 'Name', 'Role'])
     return report_df
 
+# Function to run the report page
 def run_report_page(face_rec):
     st.title("Attendance Report")
 
@@ -302,8 +259,6 @@ def run_report_page(face_rec):
             mime='text/csv',
         )
 
-def main():
+# Run the Streamlit app
+if __name__ == '__main__':
     run_report_page(face_rec)
-
-if __name__ == "__main__":
-    main()
