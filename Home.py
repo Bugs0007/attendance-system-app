@@ -1,9 +1,9 @@
 import streamlit as st
 from auth import authenticate  # Ensure this import matches your project structure
 import face_rec  # Ensure this import matches your project structure
-from pages.Real_Time_Prediction import run_realtime_prediction_page
-from pages.Registration_form import run_register_page
-from pages.Report import run_report_page
+from my_pages.Real_Time_Prediction import run_realtime_prediction_page
+from my_pages.Registration_form import run_register_page
+from my_pages.Report import run_report_page
 
 # Apply local CSS
 def local_css(file_name):
