@@ -24,6 +24,7 @@ body {
 /* Centering the login form */
 /* Centering the login form */
 /* Centering the login form */
+/* Centering the login form */
 html, body, .centered-container {
     height: 100%;
     margin: 0;
@@ -73,5 +74,6 @@ header {
 .stButton button:hover {
     background-color: #3E3E3E;
 }
+
 
 
