@@ -175,10 +175,6 @@ else:
     # Display buttons under Home
     menu = ["Home", "Real-Time Prediction", "Register", "Report"]
     choice = st.sidebar.radio("Menu", menu)
-
-    if choice == "Home":
-        st.title("Home")
-        st.write("Welcome to the Attendance System")
     
     elif choice == "Real-Time Prediction":
         st.title("Real-Time Prediction")
