@@ -13,6 +13,25 @@ def local_css(file_name):
 local_css("styles.css")
 
 # Define CSS to center elements
+# centered_css = """
+#     <style>
+#     html, body, .centered-container {
+#         height: 100%;
+#         margin: 0;
+#         display: flex;
+#         justify-content: center;
+#         align-items: center;
+#     }
+#     .auth-form {
+#         background-color: white;
+#         padding: 20px;
+#         border-radius: 10px;
+#         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+#         width: 300px;
+#         text-align: center;
+#     }
+#     </style>
+# """
 centered_css = """
     <style>
     html, body, .centered-container {
@@ -21,17 +40,20 @@ centered_css = """
         display: flex;
         justify-content: center;
         align-items: center;
+        background-color: #1E1E1E;  /* Match the background color */
     }
     .auth-form {
-        background-color: white;
+        background-color: #2D2D2D;  /* Match the form background color */
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         width: 300px;
         text-align: center;
+        color: white;
     }
     </style>
 """
+
 
 # Display centered CSS
 st.markdown(centered_css, unsafe_allow_html=True)
