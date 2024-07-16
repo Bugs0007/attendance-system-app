@@ -100,6 +100,7 @@ hide_streamlit_style = """
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    .stApp {background-color: #1E1E1E;}  /* Match the background color */
     </style>
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
@@ -132,6 +133,20 @@ centered_css = """
         text-align: center;
         color: white;
     }
+    .stButton button {
+        width: 100%;
+        background-color: #2D2D2D;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 5px 0;
+        cursor: pointer;
+        text-align: center;
+    }
+    .stButton button:hover {
+        background-color: #3E3E3E;
+    }
     </style>
 """
 
@@ -155,10 +170,9 @@ if not st.session_state['authenticated']:
             st.error("Invalid username or password")
     st.markdown('</div></div>', unsafe_allow_html=True)
 else:
-    # Your existing Streamlit code
+    # Display buttons instead of dropdown menu
     st.title("Navigation")
-
-    # Replace dropdown with buttons
+    
     if st.button("Real-Time Prediction"):
         st.title("Real-Time Prediction")
         run_realtime_prediction_page(face_rec)
@@ -175,3 +189,4 @@ else:
     if st.button("Logout"):
         st.session_state['authenticated'] = False
         st.experimental_rerun()
+
