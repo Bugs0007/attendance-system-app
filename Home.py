@@ -173,7 +173,7 @@ else:
     st.sidebar.title("Navigation")
     
     # Display buttons under Home
-    menu = ["Home", "Real-Time Prediction", "Register", "Report"]
+    menu = ["Real-Time Prediction", "Register", "Report"]
     choice = st.sidebar.radio("Menu", menu)
     
     if choice == "Real-Time Prediction":
