@@ -94,13 +94,12 @@ from pages.Real_Time_Prediction import run_realtime_prediction_page
 from pages.Registration_form import run_register_page
 from pages.Report import run_report_page
 
-# Hide the top bar
+# Hide the top bar and footer
 hide_streamlit_style = """
     <style>
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
-    .stApp {background-color: #1E1E1E;}  /* Match the background color */
     </style>
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
@@ -170,23 +169,23 @@ if not st.session_state['authenticated']:
             st.error("Invalid username or password")
     st.markdown('</div></div>', unsafe_allow_html=True)
 else:
-    # Display buttons instead of dropdown menu
-    st.title("Navigation")
+    # Display buttons in the sidebar
+    st.sidebar.title("Navigation")
     
-    if st.button("Real-Time Prediction"):
+    if st.sidebar.button("Real-Time Prediction"):
         st.title("Real-Time Prediction")
         run_realtime_prediction_page(face_rec)
     
-    if st.button("Register"):
+    if st.sidebar.button("Register"):
         st.title("Register")
         run_register_page(face_rec)
     
-    if st.button("Report"):
+    if st.sidebar.button("Report"):
         st.title("Report")
         run_report_page(face_rec)
     
     # Add a logout button
-    if st.button("Logout"):
+    if st.sidebar.button("Logout"):
         st.session_state['authenticated'] = False
         st.experimental_rerun()
 
