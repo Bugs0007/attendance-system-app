@@ -4,7 +4,6 @@ import av
 import time
 
 def run_realtime_prediction_page(face_rec):
-    st.subheader('Face Attendance')
 
     # Retrieve the data from Redis Database
     with st.spinner('Retrieving Data from Redis DB ...'):
