@@ -4,7 +4,7 @@ import av
 import numpy as np
 
 def run_register_page(face_rec):
-    st.subheader('Registration Form')
+
 
     # Initialize registration form
     registration_form = face_rec.RegistrationForm()
